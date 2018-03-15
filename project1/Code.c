@@ -95,7 +95,7 @@ Tree Delete( Element x, Tree T )    //delete an element, recursively
                 {
                     Position P = FindMax( T->left );
                     T->key = P->key;
-                    Delete( P->key, T->left );
+                    T->left = Delete( P->key, T->left );
                 }
             }
     return T;
@@ -211,13 +211,13 @@ Tree DeleteAVL( Element x, Tree T )    //the delete operation of AVL tree, recur
                 {
                     Position P = FindMax( T->left );
                     T->key = P->key;
-                    DeleteAVL( P->key, T->left );
+                    T->left = DeleteAVL( P->key, T->left );
                 }
                 else
                 {
                     Position P = FindMin( T->right );
                     T->key = P->key;
-                    DeleteAVL( P->key, T->right );
+                    T->right = DeleteAVL( P->key, T->right );
                 }
             }
     T->height = Max( Height( T->left ), Height( T->right ) ) + 1;
@@ -274,6 +274,9 @@ static Position SingleRight( Position k2 )
 {
     Position k1;
     k1 = k2->right;
+    if(k1 == NULL){
+        return k2;
+    }
     k2->right = k1->left;
     if(k2->right != NULL)
         k2->right->parent = k2;
@@ -419,11 +422,11 @@ void Shuffle(int array[], int n){
 
 int main(){
     int n,type,order;
-    printf("Please input the size:\n");
+    // printf("Please input the size:\n");
     scanf( "%d", &n );
-    printf("Please input \"1~3\" denoting \"unbalanced tree\", \"AVL tree\", \"Splay tree\",respectively:\n");
+    // printf("Please input \"1~3\" denoting \"unbalanced tree\", \"AVL tree\", \"Splay tree\",respectively:\n");
     scanf( "%d", &type);
-    printf("Please input \"1~3\" denoting:\n  1: Insert N integers in increasing order and delete them in the same order;\n  2: Insert N integers in increasing order and delete them in the reverse order;\n  3: Insert N integers in random order and delete them in random order.\n");
+    // printf("Please input \"1~3\" denoting:\n  1: Insert N integers in increasing order and delete them in the same order;\n  2: Insert N integers in increasing order and delete them in the reverse order;\n  3: Insert N integers in random order and delete them in random order.\n");
     scanf("%d", &order);
     
     int i;
@@ -480,8 +483,9 @@ int main(){
     else printf("Illegal input!\n");
     
     end = clock();    //end timing
-    printf("Finished!\n");
-    printf("Time = %f\n",(double)(end-start)/CLOCKS_PER_SEC);//for macOS
+    // printf("Finished!\n");
+    printf("%f",(double)(end-start)/CLOCKS_PER_SEC);
+    // printf("Time = %f\n",(double)(end-start)/CLOCKS_PER_SEC);//for macOS
     // printf("Time = %f\n",(double)(end-start)/CLK_TCK);//for other operating systems
 }
 
