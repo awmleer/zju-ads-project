@@ -1,4 +1,3 @@
-## *Project of advanced Data Structure*
+# *Project of advanced Data Structure*
 
-##### *Project 1* : *Binary Search Tree*  - [ ] 
-
+- [ ] ### *Project 1* : *Binary Search Tree*
