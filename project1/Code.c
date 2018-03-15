@@ -128,22 +128,32 @@ Tree InsertAVL( Element x, Tree T )    //the insert operation of AVL tree, recur
         {
             T->left = InsertAVL( x, T->left );
             if( Height( T->left ) - Height( T->right ) == 2 )
+            {
                 if( x < T->left->key )    //left-left cause a single rotation
                 {
                     T = SingleLeft(T);
                 }
-                else T = DoubleLeft(T);    //left-right cause a double rotation
+                else
+                {
+                    T = DoubleLeft(T);    //left-right cause a double rotation
+                }
+            }
         }
         else
             if( x > T->key )    //right
             {
                 T->right = InsertAVL( x, T->right );
                 if( Height( T->right ) - Height( T->left ) == 2 )
+                {
                     if( x > T->right->key )    //right-right cause a single rotation
                     {
                         T = SingleRight(T);
                     }
-                    else T = DoubleRight(T);    //right-left cause a double rotation
+                    else
+                    {
+                        T = DoubleRight(T);    //right-left cause a double rotation
+                    }
+                }
             }
     T->height = Max( Height( T->left ), Height( T->right ) ) + 1;    //update the height of the root of the subtree
     return T;
@@ -159,9 +169,9 @@ Tree DeleteAVL( Element x, Tree T )    //the delete operation of AVL tree, recur
         if( x < T->key)    //recurse in the left subtree
         {
             T->left = DeleteAVL( x, T->left );
-            if( Height( T->right ) - Height( T->left ) == 2 ){
-                
-                if( T->right->left == NULL || T->right->right != NULL && T->right->left->height < T->right->right->height )    //left-left cause a single rotation
+            if( Height( T->right ) - Height( T->left ) == 2 )
+            {
+                if( T->right->left == NULL || ( T->right->right != NULL && T->right->left->height < T->right->right->height ) )    //left-left cause a single rotation
                 {
                     T = SingleRight(T);
                 }
@@ -173,11 +183,16 @@ Tree DeleteAVL( Element x, Tree T )    //the delete operation of AVL tree, recur
             {
                 T->right = DeleteAVL( x, T->right );
                 if( Height( T->left ) - Height( T->right ) == 2 )
-                    if( T->left->right == NULL || T->left->left != NULL && T->left->left->height > T->left->right->height )    //left-left cause a single rotation
+                {
+                    if( T->left->right == NULL || ( T->left->left != NULL && T->left->left->height > T->left->right->height ) )    //left-left cause a single rotation
                     {
                         T = SingleRight(T);
                     }
-                    else T = DoubleLeft(T);    //left-right cause a double rotation
+                    else
+                    {
+                        T = DoubleLeft(T);    //left-right cause a double rotation
+                    }
+                }
             }
             else    //if the element is the one to delete
             {
@@ -418,7 +433,6 @@ int main(){
     int deleteArray[n];
     int x;
     for(x=0; x<n; x++){
-        // printf("%d\n", x);
         insertArray[x] = x;
         deleteArray[x] = x;
     }
