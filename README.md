@@ -2,5 +2,5 @@
 ---
 ### *Project 1 (Binary Search Tree)*:
   - [x] Code&Comment
-  - [ ] Debug&Test
+  - [x] Debug&Test
   - [ ] Report
