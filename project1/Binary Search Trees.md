@@ -6,13 +6,13 @@
 
 ---
 
-#### Chapter 1: Introduction####
+#### Chapter 1: Introduction
 
 ​	Analyze and compare the performances of a sequence of insertions and deletions between **unbalanced binary search trees**, **AVL trees** and **splay trees**.
 
 ---
 
-#### Chapter 2: Data Structure / Algorithm Specification####
+#### Chapter 2: Data Structure / Algorithm Specification
 
 *Structure of a binary tree :*
 
@@ -352,7 +352,7 @@ TreeNode Splay( Position c, Position T )
 
 ---
 
-#### Chapter 3 : Testing Results####
+#### Chapter 3 : Testing Results
 
 - ***Insert N integers in increasing order and delete them in the same order***
 
@@ -401,13 +401,13 @@ TreeNode Splay( Position c, Position T )
 
 ---
 
-####Chapter 4 : Analysis and Comments
+#### Chapter 4 : Analysis and Comments
 
 ​	
 
 ---
 
-#### References ####
+#### References
 
 - Wikipedia contributors, "AVL Tree", *Wikipedia, The Free Encyclopedia* https://en.wikipedia.org/wiki/AVL_tree (accessed March 16, 2018).
 - Wikipedia contributors, "Splay tree", *Wikipedia, The Free Encyclopedia* https://en.wikipedia.org/wiki/Splay_tree (accessed March 16, 2018).
