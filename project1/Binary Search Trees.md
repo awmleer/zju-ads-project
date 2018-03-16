@@ -16,7 +16,7 @@
 
 *Structure of a binary tree :*
 
-```c
+```c++
 struct TreeNode{
     Element key;
     TreeNode *left;
@@ -28,7 +28,7 @@ struct TreeNode{
 
 *Algorithms of Function "Find" :*
 
-```c
+```c++
 Position Find( Element x, Tree T )
 {
     if( T == NULL ) return NULL;
@@ -88,7 +88,7 @@ TreeNode Delete( Element x, TreeNode T )
 
 ​	To re-balance the subtree, we have four cases of rotate algorithms.
 
-```c
+```c++
 Position SingleLeft( Position k2 )
 {
     Position k1;
@@ -144,7 +144,7 @@ static Position DoubleRight( Position k3 )
 - Starting from x, travel up and find the first unbalanced node.  Let m be the first unbalanced node, n be the child of m that comes on the path from x to m and m be the grandchild of m that comes on the path from x to m.
 - Re-balance the tree by performing appropriate rotations on the subtree rooted with m. 
 
-```
+```c++
 TreeNode InsertAVL( Element x, TreeNode T )
 {
     if( T == NULL )
@@ -255,7 +255,7 @@ TreeNode DeleteAVL( Element x, TreeNode T )
 - when an item is inserted, a splay is performed.
 - As a result, the newly inserted node *x* becomes the root of the tree.
 
-```
+```c++
 TreeNode InsertSPL( Element x, TreeNode T, Position parent ) 
 {
     if( T == NULL ) 
