@@ -45,7 +45,7 @@ Position Find( Element x, Tree T )
     if( T->key < x ) return Find( x, T->right );
 }
 
-/* operation of unbalanced tree */
+/* operation of unbalanced trees */
 
 Tree Insert( Element x, Tree T )    //insert an element, recursively
 {
@@ -74,30 +74,28 @@ Tree Delete( Element x, Tree T )    //delete an element, recursively
     {
         return T;
     }
-    else
-        if( x < T->key)    //recurse in the left subtree
+    else if( x < T->key)    //recurse in the left subtree
         {
             T->left = Delete( x, T->left );
         }
-        else
-            if( x > T->key ) //recurse in the right subtree
-            {
-                T->right = Delete( x, T->right );
+    else if( x > T->key ) //recurse in the right subtree
+        {
+            T->right = Delete( x, T->right );
+        }
+    else    //if the element is the one to delete
+        {
+            if( T->left == NULL ){
+            Position P = T->right;
+            free(T);
+            return P;    //let right tree take the place of it, the height of the right tree will not change
             }
-            else    //if the element is the one to delete
+            else    //will always choose the left, except it is null
             {
-                if( T->left == NULL ){
-                    Position P = T->right;
-                    free(T);
-                    return P;    //let right tree take the place of it, the height of the right tree will not change
-                }
-                else    //will always choose the left, except it is null
-                {
                     Position P = FindMax( T->left );
                     T->key = P->key;
                     T->left = Delete( P->key, T->left );
-                }
             }
+        }
     return T;
 }
 
