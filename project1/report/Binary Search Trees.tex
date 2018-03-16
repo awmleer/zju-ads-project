@@ -1,0 +1,618 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\PassOptionsToPackage{hyphens}{url} % url is loaded by hyperref
+\usepackage[unicode=true]{hyperref}
+\hypersetup{
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{longtable,booktabs}
+% Fix footnotes in tables (requires footnote package)
+\IfFileExists{footnote.sty}{\usepackage{footnote}\makesavenoteenv{long table}}{}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+
+\date{}
+
+\begin{document}
+
+\section{Binary Search Trees}\label{header-n0}
+
+\textbf{author:}
+
+\textbf{Date:2018-03-16}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\paragraph{Chapter 1: Introduction}\label{header-n7}
+
+ Analyze and compare the performances of a sequence of insertions and
+deletions between \textbf{unbalanced binary search trees}, \textbf{AVL
+trees} and \textbf{splay trees}.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\paragraph{Chapter 2: Data Structure / Algorithm
+Specification}\label{header-n11}
+
+\emph{Structure of a binary tree :}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{struct}\NormalTok{ TreeNode\{}
+\NormalTok{    Element key;}
+\NormalTok{    TreeNode *left;}
+\NormalTok{    TreeNode *right;}
+\NormalTok{    TreeNode *parent;}
+\NormalTok{    Value Height;}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\emph{Algorithms of Function "Find" :}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Position Find( Element x, Tree T )}
+\NormalTok{\{}
+    \ControlFlowTok{if}\NormalTok{( T == NULL ) }\ControlFlowTok{return}\NormalTok{ NULL;}
+    \ControlFlowTok{if}\NormalTok{( T->key == x ) }\ControlFlowTok{return}\NormalTok{ T;}
+    \ControlFlowTok{if}\NormalTok{( T->key > x ) }\ControlFlowTok{return}\NormalTok{ Find( x, T->left );}
+    \ControlFlowTok{if}\NormalTok{( T->key < x ) }\ControlFlowTok{return}\NormalTok{ Find( x, T->right );}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{\emph{Unbalanced trees :}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{TreeNode Insert(Element x, TreeNode T)}
+\NormalTok{\{}
+    \ControlFlowTok{if}\NormalTok{( T == NULL )}
+\NormalTok{    \{}
+\NormalTok{        T = }\KeywordTok{new}\NormalTok{ TreeNode;}
+\NormalTok{        T->key = x;}
+\NormalTok{        T->left = T->right = NULL;}
+\NormalTok{    \}}
+    \ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{( x < T->key)}
+\NormalTok{            T->left = Insert( x, T->left );}
+    \ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{( x > T->key )}
+\NormalTok{                T->right = Insert( x, T->right );}
+    \ControlFlowTok{return}\NormalTok{ T;}
+\NormalTok{\}}
+
+
+\NormalTok{TreeNode Delete( Element x, TreeNode T )}
+\NormalTok{\{}
+    \ControlFlowTok{if}\NormalTok{( T == NULL )  }
+        \ControlFlowTok{return}\NormalTok{ T;}
+    \ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{( x < T->key) }
+\NormalTok{            T->left = Delete( x, T->left );}
+    \ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{( x > T->key )}
+\NormalTok{            T->right = Delete( x, T->right );}
+    \ControlFlowTok{else}  
+\NormalTok{        \{}
+            \ControlFlowTok{if}\NormalTok{( T->left == NULL )}
+\NormalTok{            \{}
+\NormalTok{            	Position P = T->right;}
+\NormalTok{            	free(T);}
+            	\ControlFlowTok{return}\NormalTok{ P;   }
+\NormalTok{            \}}
+            \ControlFlowTok{else}
+\NormalTok{            \{}
+\NormalTok{            	Position P = FindMax( T->left );}
+\NormalTok{            	T->key = P->key;}
+\NormalTok{            	T->left = Delete( P->key, T->left );}
+\NormalTok{            \}}
+\NormalTok{        \}}
+    \ControlFlowTok{return}\NormalTok{ T;}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{\emph{AVL trees :}}
+
+ To re-balance the subtree, we have four cases of rotate algorithms.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Position SingleLeft( Position k2 )}
+\NormalTok{\{}
+\NormalTok{    Position k1;}
+\NormalTok{    k1 = k2->left;}
+\NormalTok{    k2->left = k1->right;}
+    \ControlFlowTok{if}\NormalTok{(k2->left != NULL)}
+\NormalTok{        k2->left->parent = k2;}
+\NormalTok{    k1->right = k2;}
+\NormalTok{    k1->parent = k2->parent;}
+\NormalTok{    k2->parent = k1;}
+    
+\NormalTok{    k2->height = Max( Height( k2->left ), Height( k2->right ) ) + }\DecValTok{1}\NormalTok{;}
+\NormalTok{    k1->height = Max( Height( k1->left ), Height( k2->right ) ) + }\DecValTok{1}\NormalTok{;}
+    
+    \ControlFlowTok{return}\NormalTok{ k1;}
+\NormalTok{\}}
+
+\NormalTok{Position DoubleLeft( Position k3 )}
+\NormalTok{\{}
+\NormalTok{    k3->left = SingleRight( k3->left );}
+    \ControlFlowTok{return}\NormalTok{ SingleLeft( k3 );}
+\NormalTok{\}}
+
+\AttributeTok{static}\NormalTok{ Position SingleRight( Position k2 )}
+\NormalTok{\{}
+\NormalTok{    Position k1;}
+\NormalTok{    k1 = k2->right;}
+    \ControlFlowTok{if}\NormalTok{(k1 == NULL)\{}
+        \ControlFlowTok{return}\NormalTok{ k2;}
+\NormalTok{    \}}
+\NormalTok{    k2->right = k1->left;}
+    \ControlFlowTok{if}\NormalTok{(k2->right != NULL)}
+\NormalTok{        k2->right->parent = k2;}
+\NormalTok{    k1->left = k2;}
+\NormalTok{    k1->parent = k2->parent;}
+\NormalTok{    k2->parent = k1;}
+    
+\NormalTok{    k2->height = Max( Height( k2->right ), Height( k2->left ) ) + }\DecValTok{1}\NormalTok{;}
+\NormalTok{    k1->height = Max( Height( k1->right ), Height( k2->left ) ) + }\DecValTok{1}\NormalTok{;   }
+    \ControlFlowTok{return}\NormalTok{ k1;}
+\NormalTok{\}}
+
+\AttributeTok{static}\NormalTok{ Position DoubleRight( Position k3 )}
+\NormalTok{\{}
+\NormalTok{    k3->right = SingleLeft( k3->right );}
+    \ControlFlowTok{return}\NormalTok{ SingleRight( k3 );}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+ To insert a value \emph{x} into a splay tree:
+
+\begin{itemize}
+\item
+  Perform standard BST insert for x.
+\item
+  Starting from x, travel up and find the first unbalanced node. Let m
+  be the first unbalanced node, n be the child of m that comes on the
+  path from x to m and m be the grandchild of m that comes on the path
+  from x to m.
+\item
+  Re-balance the tree by performing appropriate rotations on the subtree
+  rooted with m. 
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{TreeNode InsertAVL( Element x, TreeNode T )}
+\NormalTok{\{}
+    \ControlFlowTok{if}\NormalTok{( T == NULL )}
+\NormalTok{    \{}
+\NormalTok{        T = }\KeywordTok{new}\NormalTok{ TreeNode}
+\NormalTok{        T->key = x;}
+\NormalTok{        T->height = }\DecValTok{0}\NormalTok{;}
+\NormalTok{        T->left = T->right = NULL;}
+\NormalTok{    \}}
+    \ControlFlowTok{else}
+        \ControlFlowTok{if}\NormalTok{( x < T->key)}
+\NormalTok{        \{}
+\NormalTok{            T->left = InsertAVL( x, T->left );}
+            \ControlFlowTok{if}\NormalTok{( Height( T->left ) - Height( T->right ) == }\DecValTok{2}\NormalTok{ )}
+\NormalTok{            \{}
+                \ControlFlowTok{if}\NormalTok{( x < T->left->key )}
+\NormalTok{                    T = SingleLeft(T);}
+                \ControlFlowTok{else}
+\NormalTok{                    T = DoubleLeft(T);}
+\NormalTok{            \}}
+\NormalTok{        \}}
+        \ControlFlowTok{else}
+            \ControlFlowTok{if}\NormalTok{( x > T->key )}
+\NormalTok{            \{}
+\NormalTok{                T->right = InsertAVL( x, T->right );}
+                \ControlFlowTok{if}\NormalTok{( Height( T->right ) - Height( T->left ) == }\DecValTok{2}\NormalTok{ )}
+\NormalTok{                \{}
+                    \ControlFlowTok{if}\NormalTok{( x > T->right->key )}
+\NormalTok{                        T = SingleRight(T);}
+                    \ControlFlowTok{else}
+\NormalTok{                        T = DoubleRight(T);}
+\NormalTok{                \}}
+\NormalTok{            \}}
+\NormalTok{    T->height = Max( Height( T->left ), Height( T->right ) ) + }\DecValTok{1}\NormalTok{;}
+    \ControlFlowTok{return}\NormalTok{ T;}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+ To delete a node W :
+
+\begin{itemize}
+\item
+  Perform standard BST delete for w.
+\item
+  Starting from w, travel up and find the first unbalanced node. Let z
+  be the first unbalanced node, y be the larger height child of z, and x
+  be the larger height child of y. 
+\item
+  Re-balance the tree by performing appropriate rotations on the subtree
+  rooted with z. 
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{TreeNode DeleteAVL( Element x, TreeNode T )}
+\NormalTok{\{}
+    \ControlFlowTok{if}\NormalTok{( T == NULL )}
+        \ControlFlowTok{return}\NormalTok{ T;}
+    \ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{( x < T->key)}
+\NormalTok{        \{}
+\NormalTok{            T->left = DeleteAVL( x, T->left );}
+            \ControlFlowTok{if}\NormalTok{( Height( T->right ) - Height( T->left ) == }\DecValTok{2}\NormalTok{ )}
+\NormalTok{            \{}
+                \ControlFlowTok{if}\NormalTok{( T->right->left == NULL || ( T->right->right != NULL && T->right->left->height < T->right->right->height ) ) }
+\NormalTok{                    T = SingleRight(T);}
+                \ControlFlowTok{else}\NormalTok{ T = DoubleRight(T); }
+\NormalTok{            \}}
+\NormalTok{        \}}
+        \ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{( x > T->key )}
+\NormalTok{            \{}
+\NormalTok{                T->right = DeleteAVL( x, T->right );}
+                \ControlFlowTok{if}\NormalTok{( Height( T->left ) - Height( T->right ) == }\DecValTok{2}\NormalTok{ )}
+\NormalTok{                \{}
+                    \ControlFlowTok{if}\NormalTok{( T->left->right == NULL || ( T->left->left != NULL && T->left->left->height > T->left->right->height ) ) }
+\NormalTok{                        T = SingleRight(T);}
+                    \ControlFlowTok{else}
+\NormalTok{                        T = DoubleLeft(T); }
+\NormalTok{                \}}
+\NormalTok{            \}}
+        \ControlFlowTok{else} 
+\NormalTok{            \{}
+                \ControlFlowTok{if}\NormalTok{( T->left == NULL )\{}
+\NormalTok{                    Position P = T->right;}
+\NormalTok{                    free(T);}
+                    \ControlFlowTok{return}\NormalTok{ P;}
+\NormalTok{                \}}
+                \ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{( T->right == NULL )\{}
+\NormalTok{                    Position P = T->left;}
+\NormalTok{                    free(T);}
+                    \ControlFlowTok{return}\NormalTok{ P;}
+\NormalTok{                \}}
+                \ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{( T->left->height > T->right->height )}
+\NormalTok{                \{}
+\NormalTok{                    Position P = FindMax( T->left );}
+\NormalTok{                    T->key = P->key;}
+\NormalTok{                    T->left = DeleteAVL( P->key, T->left );}
+\NormalTok{                \}}
+                \ControlFlowTok{else}
+\NormalTok{                \{}
+\NormalTok{                    Position P = FindMin( T->right );}
+\NormalTok{                    T->key = P->key;}
+\NormalTok{                    T->right = DeleteAVL( P->key, T->right );}
+\NormalTok{                \}}
+\NormalTok{            \}}
+\NormalTok{    T->height = Max( Height( T->left ), Height( T->right ) ) + }\DecValTok{1}\NormalTok{;}
+    \ControlFlowTok{return}\NormalTok{ T;}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{\emph{Splay trees :}}
+
+ A splay tree is a binary search tree. It has one interesting
+difference, however: whenever an element is looked up in the tree, the
+splay tree reorganizes to move that element to the root of the tree,
+without breaking the binary search tree invariant. If the next lookup
+request is for the same element, it can be returned immediately. In
+general, if a small number of elements are being heavily used, they will
+tend to be found near the top of the tree and are thus found quickly.
+
+ To insert a value \emph{x} into a splay tree:
+
+\begin{itemize}
+\item
+  Insert \emph{x} as with a normal binary search tree.
+\item
+  when an item is inserted, a splay is performed.
+\item
+  As a result, the newly inserted node \emph{x} becomes the root of the
+  tree.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{TreeNode InsertSPL( Element x, TreeNode T, Position parent ) }
+\NormalTok{\{}
+    \ControlFlowTok{if}\NormalTok{( T == NULL ) }
+\NormalTok{    \{}
+\NormalTok{        T = }\KeywordTok{new}\NormalTok{ TreeNode;}
+\NormalTok{        T->key = x;}
+\NormalTok{        T->left = T->right = NULL;}
+\NormalTok{        T->parent = parent;  }
+\NormalTok{    \}}
+    \ControlFlowTok{else}
+        \ControlFlowTok{if}\NormalTok{( x < T->key)}
+\NormalTok{        \{}
+\NormalTok{            T->left = InsertSPL( x, T->left, T );}
+\NormalTok{        \}}
+        \ControlFlowTok{else}
+            \ControlFlowTok{if}\NormalTok{( x > T->key ) }
+\NormalTok{            \{}
+\NormalTok{                T->right = InsertSPL( x, T->right, T );}
+\NormalTok{            \}}
+    \ControlFlowTok{return}\NormalTok{ T;}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+ To delete a node \emph{x}, use the same method as with a binary search
+tree: if \emph{x} has two children, swap its value with that of either
+the rightmost node of its left sub tree (its in-order predecessor) or
+the leftmost node of its right subtree (its in-order successor). Then
+remove that node instead. In this way, deletion is reduced to the
+problem of removing a node with 0 or 1 children. Unlike a binary search
+tree, in a splay tree after deletion, we splay the parent of the removed
+node to the top of the tree.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{TreeNode DeleteSPL( Element x, TreeNode T )}
+\NormalTok{\{}
+\NormalTok{    Position P = Find( x, T );}
+    \ControlFlowTok{if}\NormalTok{(P == NULL) }
+        \ControlFlowTok{return}\NormalTok{ T;}
+\NormalTok{    T = Splay( P, NULL ); }
+    \ControlFlowTok{if}\NormalTok{(T->left == NULL)\{}
+        \ControlFlowTok{if}\NormalTok{(T->right != NULL)}
+\NormalTok{            T->right->parent = NULL;}
+\NormalTok{        P = T->right; }
+\NormalTok{        free(T);}
+        \ControlFlowTok{return}\NormalTok{ P;}
+\NormalTok{    \}}
+\NormalTok{    P = FindMax(T->left); }
+\NormalTok{    P = Splay( P, T ); }
+\NormalTok{    P->right = T->right;  }
+    \ControlFlowTok{if}\NormalTok{(P->right != NULL)\{}
+\NormalTok{        P->right->parent = P;}
+\NormalTok{    \}}
+\NormalTok{    P->parent = NULL;}
+\NormalTok{    free(T);}
+    \ControlFlowTok{return}\NormalTok{ P;}
+\NormalTok{\}}
+
+
+\NormalTok{TreeNode Splay( Position c, Position T )}
+\NormalTok{\{}
+\NormalTok{    Position p = c->parent;   }
+    \ControlFlowTok{if}\NormalTok{(p == T || p == NULL) }
+        \ControlFlowTok{return}\NormalTok{ c;}
+\NormalTok{    Position g = p->parent;  }
+    \ControlFlowTok{if}\NormalTok{(g == T || g == NULL)   }
+\NormalTok{    \{}
+        \ControlFlowTok{if}\NormalTok{(c->key < p->key)\{}
+            \ControlFlowTok{return}\NormalTok{ Splay( SingleLeft(p), T );}
+\NormalTok{        \}}
+        \ControlFlowTok{else}
+\NormalTok{        \{}
+            \ControlFlowTok{return}\NormalTok{ Splay( SingleRight(p), T );}
+\NormalTok{        \}}
+\NormalTok{    \}}
+    \ControlFlowTok{else}
+\NormalTok{    \{}
+        \ControlFlowTok{if}\NormalTok{(g->parent != NULL) }
+\NormalTok{        \{}
+            \ControlFlowTok{if}\NormalTok{(g->parent->left == g)\{}
+\NormalTok{                g->parent->left = c;}
+\NormalTok{            \}}
+            \ControlFlowTok{else}\NormalTok{ g->parent->right = c;}
+\NormalTok{        \}}
+        \ControlFlowTok{if}\NormalTok{(c->key < p->key && p->key < g->key)\{}
+\NormalTok{            SingleLeft(g);}
+            \ControlFlowTok{return}\NormalTok{ Splay( SingleLeft(p), T );}
+\NormalTok{        \}}
+        \ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{(c->key > p->key && p->key > g->key)\{}
+\NormalTok{            SingleRight(g);}
+            \ControlFlowTok{return}\NormalTok{ Splay( SingleRight(p), T );}
+\NormalTok{        \}}
+        \ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{(c->key > p->key && p->key < g->key)\{}
+            \ControlFlowTok{return}\NormalTok{ Splay( DoubleLeft(g), T );}
+\NormalTok{        \}}
+        \ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{(c->key < p->key && p->key > g->key)\{}
+            \ControlFlowTok{return}\NormalTok{ Splay( DoubleRight(g), T );}
+\NormalTok{        \}}
+\NormalTok{    \}}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\paragraph{Chapter 3 : Testing Results}\label{header-n73}
+
+\begin{itemize}
+\item
+  \textbf{\emph{Insert N integers in increasing order and delete them in
+  the same order}}
+\end{itemize}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+Size(k) & BST & AVL & SPLAY\tabularnewline
+\midrule
+\endhead
+1 & 3.699 & 0.614 & 0.482\tabularnewline
+2 & 13.886 & 1.292 & 0.933\tabularnewline
+3 & 31.243 & 2.049 & 1.29\tabularnewline
+4 & 57.713 & 2.693 & 1.702\tabularnewline
+5 & 95.465 & 3.601 & 2.14\tabularnewline
+6 & 134.547 & 4.301 & 2.698\tabularnewline
+7 & 188.58 & 4.929 & 3.012\tabularnewline
+8 & 250.152 & 5.609 & 3.626\tabularnewline
+9 & 319.714 & 6.97 & 3.788\tabularnewline
+10 & 395.328 & 6.916 & 4.418\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{itemize}
+\item
+  \textbf{\emph{Insert N integers in increasing order and delete them in
+  the reverse order}}
+\end{itemize}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+Size(k) & BST & AVL & SPLAY\tabularnewline
+\midrule
+\endhead
+1 & 8.095 & 0.546 & 0.284\tabularnewline
+2 & 33.56 & 1.192 & 0.547\tabularnewline
+3 & 75.818 & 1.816 & 0.773\tabularnewline
+4 & 141.807 & 2.462 & 0.967\tabularnewline
+5 & 231.247 & 3.165 & 1.241\tabularnewline
+6 & 340.504 & 4.05 & 1.524\tabularnewline
+7 & 473.064 & 4.395 & 1.748\tabularnewline
+8 & 632.216 & 4.958 & 1.998\tabularnewline
+9 & 805.574 & 5.581 & 2.277\tabularnewline
+10 & 1009.729 & 6.199 & 2.606\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{itemize}
+\item
+  \textbf{\emph{Insert N integers in random order and delete them in
+  random order}}
+\end{itemize}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+Size(k) & BST & AVL & SPLAY\tabularnewline
+\midrule
+\endhead
+1 & 0.481 & 0.96 & 2.042\tabularnewline
+2 & 0.951 & 1.634 & 4.516\tabularnewline
+3 & 1.493 & 2.975 & 7.302\tabularnewline
+4 & 2.064 & 3.815 & 9.829\tabularnewline
+5 & 2.59 & 4.743 & 12.724\tabularnewline
+6 & 3.4 & 6.081 & 15.611\tabularnewline
+7 & 3.854 & 6.843 & 18.839\tabularnewline
+8 & 4.515 & 8.417 & 22.569\tabularnewline
+9 & 5.247 & 9.56 & 25.788\tabularnewline
+10 & 5.853 & 11.348 & 29.029\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\paragraph{Chapter 4 : Analysis and Comments}\label{header-n255}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\paragraph{References}\label{header-n259}
+
+\begin{itemize}
+\item
+  Wikipedia contributors, "AVL Tree", \emph{Wikipedia, The Free
+  Encyclopedia} \url{https://en.wikipedia.org/wiki/AVL_tree} (accessed
+  March 16, 2018).
+\item
+  Wikipedia contributors, "Splay tree", \emph{Wikipedia, The Free
+  Encyclopedia} \url{https://en.wikipedia.org/wiki/Splay_tree} (accessed
+  March 16, 2018).
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\paragraph{Author List}\label{header-n268}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\paragraph{Declaration}\label{header-n272}
+
+ \textbf{\emph{We hereby declare that all the work done in this project
+titled "Binary Search Trees" is of our independent effort as a group.}}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\paragraph{Signatures}\label{header-n276}
+
+\end{document}
