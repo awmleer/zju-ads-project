@@ -26,7 +26,7 @@ struct TreeNode{
 }
 ```
 
-*Algorithms of find :*
+*Algorithms of Function "Find" :*
 
 ```c
 Position Find( Element x, Tree T )
@@ -38,7 +38,7 @@ Position Find( Element x, Tree T )
 }
 ```
 
-*Operation of unbalanced trees :*
+***Unbalanced trees :***
 
 ```c++
 TreeNode Insert(Element x, TreeNode T)
@@ -84,7 +84,9 @@ TreeNode Delete( Element x, TreeNode T )
 }
 ```
 
-*Operation of AVL trees :*
+***AVL trees :***
+
+​	To re-balance the subtree, we have four cases of rotate algorithms.
 
 ```c
 Position SingleLeft( Position k2 )
@@ -136,9 +138,13 @@ static Position DoubleRight( Position k3 )
 }
 ```
 
-![](C:\Users\11099\Pictures\实验步骤\捕获.PNG)
+​	To insert a value *x* into a splay tree:
 
-```c++
+- Perform standard BST insert for x.
+- Starting from x, travel up and find the first unbalanced node.  Let m be the first unbalanced node, n be the child of m that comes on the path from x to m and m be the grandchild of m that comes on the path from x to m.
+- Re-balance the tree by performing appropriate rotations on the subtree rooted with m. 
+
+```
 TreeNode InsertAVL( Element x, TreeNode T )
 {
     if( T == NULL )
@@ -175,8 +181,15 @@ TreeNode InsertAVL( Element x, TreeNode T )
     T->height = Max( Height( T->left ), Height( T->right ) ) + 1;
     return T;
 }
+```
 
+​	To delete a node W :
 
+- Perform standard BST delete for w.
+- Starting from w, travel up and find the first unbalanced node. Let z be the first unbalanced node, y be the larger height child of z, and x be the larger height child of y. 
+- Re-balance the tree by performing appropriate rotations on the subtree rooted with z. 
+
+```c++
 TreeNode DeleteAVL( Element x, TreeNode T )
 {
     if( T == NULL )
@@ -232,7 +245,41 @@ TreeNode DeleteAVL( Element x, TreeNode T )
 }
 ```
 
-*Operation of splay trees :*
+***Splay trees :***
+
+​	A splay tree is a binary search tree. It has one interesting difference, however: whenever an element is looked up in the tree, the splay tree reorganizes to move that element to the root of the tree, without breaking the binary search tree invariant. If the next lookup request is for the same element, it can be returned immediately. In general, if a small number of elements are being heavily used, they will tend to be found near the top of the tree and are thus found quickly.
+
+​	To insert a value *x* into a splay tree:
+
+- Insert *x* as with a normal binary search tree.
+- when an item is inserted, a splay is performed.
+- As a result, the newly inserted node *x* becomes the root of the tree.
+
+```
+TreeNode InsertSPL( Element x, TreeNode T, Position parent ) 
+{
+    if( T == NULL ) 
+    {
+        T = new TreeNode;
+        T->key = x;
+        T->left = T->right = NULL;
+        T->parent = parent;  
+    }
+    else
+        if( x < T->key)
+        {
+            T->left = InsertSPL( x, T->left, T );
+        }
+        else
+            if( x > T->key ) 
+            {
+                T->right = InsertSPL( x, T->right, T );
+            }
+    return T;
+}
+```
+
+​	To delete a node *x*, use the same method as with a binary search tree: if *x* has two children, swap its value with that of either the rightmost node of its left sub tree (its in-order predecessor) or the leftmost node of its right subtree (its in-order successor). Then remove that node instead. In this way, deletion is reduced to the problem of removing a node with 0 or 1 children. Unlike a binary search tree, in a splay tree after deletion, we splay the parent of the removed node to the top of the tree.
 
 ```c++
 TreeNode DeleteSPL( Element x, TreeNode T )
@@ -257,29 +304,6 @@ TreeNode DeleteSPL( Element x, TreeNode T )
     P->parent = NULL;
     free(T);
     return P;
-}
-
-
-TreeNode InsertWithParent( Element x, TreeNode T, Position parent ) 
-{
-    if( T == NULL ) 
-    {
-        T = new TreeNode;
-        T->key = x;
-        T->left = T->right = NULL;
-        T->parent = parent;  
-    }
-    else
-        if( x < T->key)
-        {
-            T->left = InsertWithParent( x, T->left, T );
-        }
-        else
-            if( x > T->key ) 
-            {
-                T->right = InsertWithParent( x, T->right, T );
-            }
-    return T;
 }
 
 
@@ -326,5 +350,80 @@ TreeNode Splay( Position c, Position T )
 }
 ```
 
+---
+
+#### Chapter 3 : Testing Results####
+
+- ***Insert N integers in increasing order and delete them in the same order***
+
+| Size(k) | BST     | AVL   | SPLAY |
+| ------- | ------- | ----- | ----- |
+| 1       | 3.699   | 0.614 | 0.482 |
+| 2       | 13.886  | 1.292 | 0.933 |
+| 3       | 31.243  | 2.049 | 1.29  |
+| 4       | 57.713  | 2.693 | 1.702 |
+| 5       | 95.465  | 3.601 | 2.14  |
+| 6       | 134.547 | 4.301 | 2.698 |
+| 7       | 188.58  | 4.929 | 3.012 |
+| 8       | 250.152 | 5.609 | 3.626 |
+| 9       | 319.714 | 6.97  | 3.788 |
+| 10      | 395.328 | 6.916 | 4.418 |
+
+- ***Insert N integers in increasing order and delete them in the reverse order***
+
+| Size(k) | BST      | AVL   | SPLAY |
+| ------- | -------- | ----- | ----- |
+| 1       | 8.095    | 0.546 | 0.284 |
+| 2       | 33.56    | 1.192 | 0.547 |
+| 3       | 75.818   | 1.816 | 0.773 |
+| 4       | 141.807  | 2.462 | 0.967 |
+| 5       | 231.247  | 3.165 | 1.241 |
+| 6       | 340.504  | 4.05  | 1.524 |
+| 7       | 473.064  | 4.395 | 1.748 |
+| 8       | 632.216  | 4.958 | 1.998 |
+| 9       | 805.574  | 5.581 | 2.277 |
+| 10      | 1009.729 | 6.199 | 2.606 |
+
+- ***Insert N integers in random order and delete them in random order***
+
+| Size(k) | BST   | AVL    | SPLAY  |
+| ------- | ----- | ------ | ------ |
+| 1       | 0.481 | 0.96   | 2.042  |
+| 2       | 0.951 | 1.634  | 4.516  |
+| 3       | 1.493 | 2.975  | 7.302  |
+| 4       | 2.064 | 3.815  | 9.829  |
+| 5       | 2.59  | 4.743  | 12.724 |
+| 6       | 3.4   | 6.081  | 15.611 |
+| 7       | 3.854 | 6.843  | 18.839 |
+| 8       | 4.515 | 8.417  | 22.569 |
+| 9       | 5.247 | 9.56   | 25.788 |
+| 10      | 5.853 | 11.348 | 29.029 |
+
+---
+
+####Chapter 4 : Analysis and Comments
+
+​	
+
+---
+
+#### References ####
+
+- Wikipedia contributors, "AVL Tree", *Wikipedia, The Free Encyclopedia* https://en.wikipedia.org/wiki/AVL_tree (accessed March 16, 2018).
+- Wikipedia contributors, "Splay tree", *Wikipedia, The Free Encyclopedia* https://en.wikipedia.org/wiki/Splay_tree (accessed March 16, 2018).
+
+---
+
+#### Author List 
 
 
+
+---
+
+#### Declaration
+
+​	***We hereby declare that all the work done in this project titled "Binary Search Trees" is of our independent effort as a group.***
+
+---
+
+#### Signatures
