@@ -1,4 +1,4 @@
-# Binary Search Trees#
+# Binary Search Trees
 
 **author:**
 
