@@ -65,14 +65,58 @@ void fib_insert(FibHeap *heap, FibNode *node)
 	heap->keyNum++;
 }
 
-//
+//insert the node b after the node a
 void fib_union(FibNode *a,FibNode *b)
 {
 	FibNode *tmp = a->right;
 	a->right = b->right;
 	b->right->left = a;
 	b->right = tmp;
-	tmp->right = b;
+	tmp->left = b;
 }
 
+//merge the two FibHeap
 FibHeap* fib_merge(FibHeap *h1,FibHeap *h2)
+{
+
+	//h1/h2 is nullptr
+	if(h1==nullptr)
+		return h2;
+	if(h2==nullptr)
+		return h1;
+	
+	//ensure the heap1 possess the max degree
+	FibHeap *tmp;
+	if(h1->maxNumofDegree<h2->maxNumofDegree)
+	{
+		tmp=h1;
+		h1=h2;
+		h2=tmp;
+	}
+
+
+	if(h1->min==nullptr)
+	{
+		h1->min=h2->min;
+		h1->keyNum=h2->keyNum;
+		free(h2->cons);
+		free(h2);
+	}
+	else if(h2->min==nullptr)
+	{
+		free(h2->cons);
+		free(h2);
+	}
+	else
+	{
+		fib_union(h1->min,h2->min);
+		if(h1->min->key>h2->min->key)
+			h1->min=h2->min;
+		h1->keyNum+=k2->keyNum;
+		free(h2->cons);
+		free(h2);
+	}
+
+	return h1;
+}
+
