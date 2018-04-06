@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<memory.h>
+#include"FibHeap.h"
 
 struct FibonacciHeapNode
 {
@@ -10,7 +11,7 @@ struct FibonacciHeapNode
 	FibonacciHeapNode *right;
 	FibonacciHeapNode *parent;
 	FibonacciHeapNode *child;
-	bool marked;
+	int marked;
 };
 typedef struct FibonacciHeapNode FibNode;
 
@@ -120,3 +121,20 @@ FibHeap* fib_merge(FibHeap *h1,FibHeap *h2)
 	return h1;
 }
 
+
+void fib_extractmin(FibHeap *heap)
+{
+	if(heap==nullptr)
+		return nullptr;
+	
+	FibNode *child = fib_nodemake();
+	FibNode *min = heap->min;
+
+	while(min->child!=nullptr)
+	{
+		child = min->child;
+		child->left->right=child->right;
+		child->right->left=child->left;
+		
+	}
+}
