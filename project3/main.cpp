@@ -3,6 +3,8 @@
 #include "FibHeap.h"
 #include <limits>
 #include <fstream>
+#include <ctime>
+#include <random>
 
 #define MAX std::numeric_limits<int>::max()
 
@@ -53,7 +55,7 @@ int main() {
             int b;
             int weight;
             inFile >> a >> b >> weight;
-            cout << a << ' ' << b << endl;
+//            cout << a << ' ' << b << endl;
             a = a - 1;
             b = b - 1;
             addEdge(nodes, edgeLists, a, b, weight);
@@ -61,8 +63,8 @@ int main() {
         }else if(c=='p'){
             inFile >> c >> c;
             inFile >> verticesCount >> edgesCount;
-            cout << verticesCount << endl;
-            cout << edgesCount << endl;
+            cout << "Vertices count: " << verticesCount << endl;
+            cout << "Edges count: " << edgesCount << endl;
             nodes = new Node*[verticesCount];
             edgeLists = new Edge*[verticesCount];
             for (int i = 0; i < verticesCount; ++i) {
@@ -73,19 +75,22 @@ int main() {
         getline(inFile, line);
     }
 
-
     //mark 0 as start vertex
     update(nodes[0], 0);
     //mark target vertex (the destination)
-    int target = verticesCount-1;
+    int target = rand() % verticesCount;
+    cout << "From vertex 0 to vertex " << target << endl;
 
     //search for the shortest path
+    int startTime = clock();
     while(findMin() != nullptr){
         Node* u = findMin();
         deleteMin();
         if(u->vertex == target){
-            cout << u->key << endl;
-            return 0;//found the root
+            cout << "The shortest path length is: " << u->key << endl;
+            int stopTime = clock();
+            cout << "Time: " << (stopTime-startTime)/double(CLOCKS_PER_SEC)*1000 << "ms" << endl;
+            return 0;
         }
         Edge* edge = edgeLists[u->vertex];
         while(edge != nullptr){
@@ -97,5 +102,6 @@ int main() {
             edge = edge->next;
         }
     }
+
     return 0;
 }
