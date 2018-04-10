@@ -80,8 +80,9 @@ int main() {
     int target = verticesCount-1;
 
     //search for the shortest path
-    while(root != nullptr){
-        Node* u = deleteMin();
+    while(findMin() != nullptr){
+        Node* u = findMin();
+        deleteMin();
         if(u->vertex == target){
             cout << u->key << endl;
             return 0;//found the root

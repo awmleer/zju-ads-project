@@ -2,16 +2,18 @@
 #define FIB_HEAP_H_
 
 #define FibonacciHeapNode Node
-typedef struct FibonacciHeapNode Node;
+typedef struct Node* PNode;
+typedef struct Node* Root;
+typedef struct FibonacciHeapNode FibNode;
 struct Node
 {
     int vertex;
     int key;
     int degree;
-    Node* left;
-    Node* right;
-    Node* parent;
-    Node* child;
+    FibNode* left;
+    FibNode* right;
+    FibNode* parent;
+    FibNode* child;
     int marked;
 };
 struct FibonacciHeap
@@ -22,11 +24,11 @@ struct FibonacciHeap
     FibonacciHeapNode **cons;
 };
 typedef struct FibonacciHeap FibHeap;
-//FibHeap *heap;
+extern FibHeap *heap;
 Node* insert(int vertex, int value);
 void update(Node* node, int value);
-//Node* findMin();
-Node* deleteMin();
-FibHeap* initHeap();
+Node* findMin();
+void deleteMin();
+void initHeap();
 
 #endif

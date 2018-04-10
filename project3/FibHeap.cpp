@@ -1,322 +1,288 @@
-#include<cstdio>
-#include<cstdlib>
+#include<stdio.h>
+#include<stdlib.h>
 #include"FibHeap.h"
-#include<cmath>
+#include<math.h>
+
+
+FibHeap *heap;
 
 //initialize FibnacciHeap
-FibHeap* initHeap()
+void initHeap()
 {
-	FibHeap *heap = nullptr;
-	heap = (FibHeap*)malloc(sizeof(FibHeap));
-	heap->keyNum = 0;
-	heap->maxNumofDegree = 0;
-	heap->min = nullptr;
-	heap->cons = nullptr;
-	return heap;
+    heap = (FibHeap*)malloc(sizeof(FibHeap));
+    heap->keyNum = 0;
+    heap->maxNumofDegree = 0;
+    heap->min = NULL;
+    heap->cons = NULL;
 }
 
 //initialize FibnacciNode
-static Node* fib_makenode(int vertex, int value)
+FibNode* fib_makenode(int vertex, int value)
 {
-    Node * node;
-
-    node = (Node *) malloc(sizeof(Node));
+    FibNode * node = (FibNode *) malloc(sizeof(FibNode));
+    //assignment
     node->vertex = vertex;
-    node->key    = value;
+    node->key = value;
     node->degree = 0;
-    node->left   = node;
-    node->right  = node;
-    node->parent = nullptr;
-    node->child  = nullptr;
+    node->left = node->right = node;
+    node->parent = node->child = NULL;
 
     return node;
 }
 
-//Insert the node ahead of the root
-void fib_addnode(Node *node, Node *root)
+//Insert the node x ahead of the node y
+void fib_addnode(FibNode *x, FibNode *y)
 {
-	node->left = root->left;
-	root->left->right = node;
-	root->left = node;
-	node->right = root;
+    x->left = y->left;
+    y->left->right = x;
+    y->left = x;
+    x->right = y;
 }
 
-//Remove node from root list
-void fib_removenode(Node *node){
-	node->left->right = node->right;
-    node->right->left = node->left;
+//Remove node x from list
+void fib_removenode(FibNode *x){
+    x->left->right = x->right;
+    x->right->left = x->left;
 }
 
 //Insert the node to the FibHeap
-void insert(FibHeap *heap, Node *node)
+Node* insert(int vertex, int value)
 {
-	if (heap->keyNum == 0){
-		heap->min = node;
-	}
-	else
-	{
-		fib_addnode(node, heap->min);
-		if ((node->key < heap->min->key))
-			heap->min = node;
-	}
-	heap->keyNum++;
+    FibNode *node = fib_makenode(vertex, value);
+    if (heap->keyNum == 0){
+        heap->min = node;
+    }
+    else{
+        fib_addnode(node, heap->min);
+        if(node->key < heap->min->key) heap->min = node;
+    }
+    heap->keyNum++;
+    return node;
 }
 
 //insert the node b after the node a
-void fib_union(Node *a,Node *b)
+void fib_union(FibNode *a,FibNode *b)
 {
-	Node *tmp = a->right;
-	a->right = b->right;
-	b->right->left = a;
-	b->right = tmp;
-	tmp->left = b;
+    FibNode *tmp = a->right;
+    a->right = b->right;
+    b->right->left = a;
+    b->right = tmp;
+    tmp->left = b;
+}
+
+Node* findMin(){
+    return heap->min;
 }
 
 //merge the two FibHeap
 FibHeap* fib_merge(FibHeap *h1,FibHeap *h2)
 {
 
-	//h1/h2 is nullptr
-	if(h1==nullptr)
-		return h2;
-	if(h2==nullptr)
-		return h1;
-	
-	//ensure the heap1 possess the max degree
-	FibHeap *tmp;
-	if(h1->maxNumofDegree<h2->maxNumofDegree)
-	{
-		tmp=h1;
-		h1=h2;
-		h2=tmp;
-	}
+    //h1/h2 is nullptr
+    if(h1==nullptr)
+        return h2;
+    if(h2==nullptr)
+        return h1;
 
-
-	if(h1->min==nullptr)
-	{
-		h1->min=h2->min;
-		h1->keyNum=h2->keyNum;
-		free(h2->cons);
-		free(h2);
-	}
-	else if(h2->min==nullptr)
-	{
-		free(h2->cons);
-		free(h2);
-	}
-	else
-	{
-		fib_union(h1->min,h2->min);
-		if(h1->min->key>h2->min->key)
-			h1->min=h2->min;
-		h1->keyNum+=h2->keyNum;
-		free(h2->cons);
-		free(h2);
-	}
-
-	return h1;
-}
-
-void renew_degree(Node *parent, int degree)
-{
-    parent->degree = parent->degree - degree;
-    if (parent-> parent == nullptr) return;
-    renew_degree(parent->parent, degree);
-}
-
-void fib_cut(FibHeap *heap, Node *node, Node *parent)
-{
-	fib_removenode(node);
-	renew_degree(parent, node->degree);
-	//node has no sibling
-	if (node == node->right)
-    	parent->child = nullptr;
-    else 
-    	parent->child = node->right;
-
-	node->parent = nullptr;
-	node->left = node->right = node;
-	node->marked = 0;
-	//add the subtree the node in to the root list
-	fib_addnode(node, heap->min);
-}
-
-void fib_cascadingcut(FibHeap *heap, Node *node)
-{
-	Node *parent = node->parent;
-	if(parent != nullptr) return;
-
-	if(node->marked == 0) node->marked = 1;
-    else
-	{
-		fib_cut(heap, node, parent);
-		fib_cascadingcut(heap, parent);
-	}
-}
-
-void fib_decrease(FibHeap *heap, Node *node, int key)
-{
-    if(heap==nullptr || heap->min==nullptr || node==nullptr) return;
-
-	if( key >= node->key) 
+    //ensure the heap1 possess the max degree
+    FibHeap *tmp;
+    if(h1->maxNumofDegree<h2->maxNumofDegree)
     {
-        printf("only increasing operation is allowed\n");
+        tmp=h1;
+        h1=h2;
+        h2=tmp;
+    }
+
+
+    if(h1->min==nullptr)
+    {
+        h1->min=h2->min;
+        h1->keyNum=h2->keyNum;
+        free(h2->cons);
+        free(h2);
+    }
+    else if(h2->min==nullptr)
+    {
+        free(h2->cons);
+        free(h2);
+    }
+    else
+    {
+        fib_union(h1->min,h2->min);
+        if(h1->min->key>h2->min->key)
+            h1->min=h2->min;
+        h1->keyNum+=h2->keyNum;
+        free(h2->cons);
+        free(h2);
+    }
+
+    return h1;
+}
+
+//cut off a node and its subtree and add them to the root list
+void fib_cut(FibHeap *heap, FibNode *node)
+{
+    if(node->parent == NULL) return;
+    FibNode *parent = node->parent;
+    fib_removenode(node);
+    parent->degree--;
+
+    if (node == node->right) parent->child = NULL;	//node with no sibling
+    else parent->child = node->right;	//node with siblings
+
+    fib_addnode(node, heap->min);	//add the subtree the node in to the root list
+    node->parent = NULL;
+    node->marked = 0;
+
+    if(parent->marked == 0) parent->marked = 1;
+    else fib_cut(heap, parent);		//pass on the cut operation
+}
+
+//decrease the key of a node
+void update(FibNode *node, int key)
+{
+    if(node==NULL || heap == NULL || heap->min == NULL) return;
+    //determines
+    if( key >= node->key)
+    {
+        printf("Only decreasing operation is allowed\n");
         return;
     }
 
-    node->key = key;
-    Node* parent = node->parent;
-    if (parent != nullptr && node->key < parent->key)
-    {
-        //cut off node and add it to the root list
-        fib_cut(heap, node, parent);
-        fib_cascadingcut(heap, parent);
-    }
+    node->key = key;	//update its key
+    //cut off node and add it to the root list
+    if (node->parent != NULL && node->key < node->parent->key) fib_cut(heap, node);
 
     // update min node
-    if (node->key < heap->min->key)
-        heap->min = node;
+    if (node->key < heap->min->key) heap->min = node;
 }
 
-void fib_makecons(FibHeap * heap)
+//link two nodes x and y (x as the root)
+void fib_link(FibHeap * heap, FibNode * x, FibNode *y)
 {
-    int old = heap->maxNumofDegree;
+    fib_removenode(y);    //remove the node y
+    //add y as x's child
+    if (x->child == NULL) x->child = y;
+    else fib_addnode(y, x->child);
+    y->parent = x;
+    y->marked = 0;
 
-    heap->maxNumofDegree = (int)(log((double)(heap->keyNum)) / log(2.0) + 1);
-
-    //if the old is enough
-    if (old >= heap->maxNumofDegree)
-        return;
-
-    //maxDegree+1 for possible union
-    heap->cons = (Node **)realloc(heap->cons, sizeof(FibHeap *) * (heap->maxNumofDegree + 1));
+    x->degree++; //renew the degree
 }
 
-Node *fib_removemin(FibHeap *heap)
-{
-    Node *min = heap->min;
-
-    if (heap->min == min->right){
-        heap->min = nullptr;    	
-	}
-    else{
-        fib_removenode(min);
-        heap->min = min->right;
-    }
-    min->left = min->right = min;
-
-    return min;
-}
-
-void fib_link(FibHeap * heap, Node * node, Node *root)
-{
-    //remove the node
-    fib_removenode(node);
-    //add node as root's child
-    if (root->child == nullptr)
-        root->child = node;
-    else
-        fib_addnode(node, root->child);
-
-    node->parent = root;
-    root->degree++;
-    node->marked = 0;
-}
-
+//concolidation function
 void fib_consolidate(FibHeap *heap)
 {
-    int i, d, D;
-    Node *x, *t, *p;
+    int i, d;
+    FibNode *x, *t;
 
-    fib_makecons(heap);	//open space for hashing
-    D = heap->maxNumofDegree + 1;
+    if(heap == NULL || heap->min == NULL) return;	//if the heap is empty
 
-    for (i = 0; i < D; i++)
-        heap->cons[i] = nullptr;
- 
+    heap->maxNumofDegree = (int)(log((double)(heap->keyNum)) / log(2.0) + 1);	//update the largest number of degrees
+    heap->cons = (FibNode **)realloc(heap->cons, sizeof(FibHeap *) * (heap->maxNumofDegree + 1));	//open space for hashing
+
+    for(i = 0; i < heap->maxNumofDegree + 1; i++) heap->cons[i] = NULL;
+
     //union root nodes with same degree
-    while (heap->min != nullptr)
+    while (heap->min != NULL)
     {
-        x = fib_removemin(heap);    //remove the min tree
-        d = x->degree;                    //get its degree
-        // heap->cons[d] != nullptr means degree collision
-        while (heap->cons[d] != nullptr)
+        d = heap->min->degree;                    //get its degree
+        x = heap->min;
+        //remove the min node
+        if (heap->min == x->right){
+            heap->min = NULL;
+        }
+        else{
+            heap->min = x->right;
+            fib_removenode(x);
+        }
+        x->left = x->right = x;	//let x be an isolated node
+
+        FibNode *p;
+        // heap->cons[d] != NULL means degree collision
+        while (heap->cons[d] != NULL)
         {
-            t = heap->cons[d];            //t has same degree as x 
+            t = heap->cons[d];            //t has same degree as x
             if (x->key > t->key)        //find smaller one as root
             {
-                p = t;
+                p = x;
                 x = t;
                 t = p;
             }
-            fib_link(heap, t, x);    //link t to x
-            heap->cons[d] = nullptr;
-            d++;
+            fib_link(heap, x, t);    //link t to x
+            heap->cons[d] = NULL;	//solve the collission
+            d = x->degree;	//x' new degree
         }
-        heap->cons[d] = x;
+        heap->cons[d] = x;	//no collission
     }
-    heap->min = nullptr;
- 
+
     //re-add node in heap->cons to root list
-    for (i = 0; i < D; i++)
+    heap->min = NULL;
+    for (i = 0; i < heap->maxNumofDegree + 1; i++)
     {
-        if (heap->cons[i] != nullptr)
+        if (heap->cons[i] != NULL)
         {
-            if (heap->min == nullptr)
+            if (heap->min == NULL)
+            {
                 heap->min = heap->cons[i];
+            }
             else
             {
                 fib_addnode(heap->cons[i], heap->min);
-                if ((heap->cons[i])->key < heap->min->key)
-                    heap->min = heap->cons[i];
+                if (heap->cons[i]->key < heap->min->key) heap->min = heap->cons[i];
             }
         }
     }
 }
 
-Node* deleteMin(FibHeap *heap)
+//delete min node and return it
+void deleteMin()
 {
-    if(heap==nullptr || heap->min==nullptr) return nullptr;
+    if(heap == NULL || heap->min == NULL) return ;
 
-    Node *child;
-    Node *min = heap->min;
+    FibNode *p;
+    FibNode *min = heap->min;
+
     // add all children of min to the root list
-    while (min->child != nullptr)
+    for(p = min->child; p != NULL; p = min->child)
     {
-        child = min->child;
-        fib_removenode(child);
-        if (child->right == child)
-            min->child = nullptr;
-        else
-            min->child = child->right;
+        fib_removenode(min->child);
 
-        fib_addnode(child, heap->min);
-        child->parent = nullptr;
+        //if p is the only node in the list
+        if (p == p->right) min->child = NULL;
+        else min->child = p->right;
+
+        //add to the root list
+        fib_addnode(p, heap->min);
+        p->parent = NULL;
     }
 
     //remove min from the list
     fib_removenode(min);
+
     //if min is the only node in the list
-    if (min->right == min)
-        heap->min = nullptr;
-    else
-    {
-        heap->min = min->right;
-        fib_consolidate(heap);
-    }
+    if (min == min->right) heap->min = NULL;
+    else heap->min = min->right;
+
+    //consolidation
+    fib_consolidate(heap);
     heap->keyNum--;
-
-    return min;
 }
 
-int main(){
-	int i;
-	FibHeap* heap = initHeap();
-	for(i = 100; i >20; i--){
-        insert(heap, fib_makenode(0, i));
-	}
-	fib_decrease(heap, heap->min, 2);
-	fib_decrease(heap, heap->min->left, 3);
-	fib_decrease(heap, heap->min->right, 4);
-	printf("%d ", heap->min->key);
-}
+//for test
+//int main(){
+//    int i;
+//    initHeap();
+//    for(i = 1500; i >20; i--){
+//        srand(i+1000);
+//        insert(0,rand());
+//    }
+//    for(i = 150; i >20; i--){
+//        deleteMin();
+//    }
+//    for(i = 21; i >20; i--){
+//        update(heap->min->right->right->child, 3700);
+//    }
+//
+//    printf("%d ", heap->min->key);
+//}
