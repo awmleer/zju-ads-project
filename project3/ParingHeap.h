@@ -2,12 +2,17 @@
 #define update DecreaseKey
 #define findMin FindMin
 #define deleteMin DeleteMin
-typedef struct Node* PNode;
-typedef struct Node* Root;
-struct Node;
+struct Node {
+    int vertex;
+    int key;
+    Node* left;
+    Node* right;
+    Node* child;
+};
+typedef Node* Root;
 Root root;
 Node* insert(int vertex, int value);
 void update(Node* node, int value);
 Node* findMin();
-void deleteMin();
+Node* deleteMin();
 void initHeap();

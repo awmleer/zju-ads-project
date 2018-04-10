@@ -2,24 +2,18 @@
 #include<cstdlib>
 #include"ParingHeap.h"
 
-struct Node {
-    int vertex;
-    int key;
-    PNode left;
-    PNode right;
-    PNode child;
-};
+//struct Node ;
 
 void initHeap(){
     root = NULL;
 }
 
-PNode LinkPair(PNode a,PNode b){
+Node* LinkPair(Node* a,Node* b){
     if(b == NULL) return a;
     if(a == NULL) return b;
     //b is linked to a as a child
     if(a->key > b->key){
-        PNode al = a->left;
+        Node* al = a->left;
         b->left = al;
         if(al != NULL){
             if(al->child == a){
@@ -30,19 +24,19 @@ PNode LinkPair(PNode a,PNode b){
                 al->right = b;
             }
         }
-        PNode temp;
+        Node* temp;
         temp = a;
         a = b;
         b = temp;
     }
     else{
-        PNode br = b->right;
+        Node* br = b->right;
         a->right = br;
         if(br != NULL) br->left = a;
     }
     //retain the sibling relation  
 
-    PNode ac = a->child;
+    Node* ac = a->child;
 
     //update a's child
     a->child = b;
@@ -57,8 +51,8 @@ PNode LinkPair(PNode a,PNode b){
     return a;
 }
 
-PNode MakePNode(int v, int x){	//make an new node
-    PNode node = (PNode)malloc(sizeof(struct Node));
+Node* MakePNode(int v, int x){	//make an new node
+    Node* node = (Node*)malloc(sizeof(struct Node));
     node->key = x;
     node->vertex = v;
     node->left = NULL;
@@ -67,17 +61,17 @@ PNode MakePNode(int v, int x){	//make an new node
     return node;
 }
 
-PNode insert(int vertex, int value){
-    PNode node = MakePNode(vertex, value);	//new node
+Node* insert(int vertex, int value){
+    Node* node = MakePNode(vertex, value);	//new node
     if(root == NULL) root = node;
     else root = LinkPair(node, root);	//paring
     return node;
 }
 
-Root MergeHeaps(PNode first){
+Root MergeHeaps(Node* first){
     //the 1st run: merge pairs from the left side
-    PNode second = first->right;
-    PNode last = first;		//3 pointers to roll forward
+    Node* second = first->right;
+    Node* last = first;		//3 pointers to roll forward
 
     //first roll
     //roll for loop
@@ -94,7 +88,7 @@ Root MergeHeaps(PNode first){
     //the 2nd run: merge pairs from the right side
     if(first != NULL) last = first;
 
-    PNode next = last->left;
+    Node* next = last->left;
     while(next != NULL){
         last = LinkPair(next, last);
         next = last->left;
@@ -102,23 +96,24 @@ Root MergeHeaps(PNode first){
     return last;
 }
 
-PNode findMin(){
+Node* findMin(){
     return root;
 }
 
-void deleteMin(){
-    PNode z = root;
-    if(z == NULL) return;
+Node* deleteMin(){
+    Node* z = root;
+    if(z == NULL) return z;
     if(z->child == NULL)
         root = NULL;	//empty the heap
     else{
-        PNode zc = z->child;
+        Node* zc = z->child;
         zc->left = NULL;
         root = MergeHeaps(zc);	//merge all children of the root
     }
+    return z;
 }
 
-void update(PNode x, int k){	//this is only for decreasing operation
+void update(Node* x, int k){	//this is only for decreasing operation
     if(x->key < k){
         printf("Increase is not allowed!\n");
         return;
@@ -126,7 +121,7 @@ void update(PNode x, int k){	//this is only for decreasing operation
     x->key = k;
     if(x != root){
         //cut x subtree from its siblings
-        PNode xl = x->left;
+        Node* xl = x->left;
         //if x is not root, its left (i.e. xl) can never be null
         if(xl->child==x){//xl is x's parent
             xl->child = x->right;

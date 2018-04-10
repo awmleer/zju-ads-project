@@ -8,8 +8,8 @@ using namespace std;
 
 struct Edge{
     int weight;
-    struct Node* node;
-    struct Edge* next;
+    Node* node;
+    Edge* next;
 };
 
 
@@ -17,14 +17,26 @@ int main() {
 //    int x = MAX;
     int verticesCount;
     cin >> verticesCount;
-    struct Node* nodes[verticesCount];
+    Node* nodes[verticesCount];
+    Edge* edgeLists[verticesCount];
     for (int i = 0; i < verticesCount; ++i) {
         nodes[i] = insert(i, MAX);
+        edgeLists[i] = nullptr;
     }
     update(nodes[0], 0);
 //    TODO init edges
+    
     while(root != nullptr){
-        struct Node* n = findMin();
+        Node* u = deleteMin();
+        Edge* edge = edgeLists[u->vertex];
+        while(edge != nullptr){
+            Node* v = edge->node;
+            int d = u->key + edge->weight;
+            if(v->key > d){
+                update(v, d);
+            }
+            edge = edge->next;
+        }
 //        deleteMin =
     }
 //    cout << x << endl;
