@@ -1,7 +1,6 @@
-#define insert Insert
-#define update DecreaseKey
-#define findMin FindMin
-#define deleteMin DeleteMin
+#ifndef PARING_HEAP_H_
+#define PARING_HEAP_H_
+
 struct Node {
     int vertex;
     int key;
@@ -10,9 +9,11 @@ struct Node {
     Node* child;
 };
 typedef Node* Root;
-Root root;
+extern Root root;
 Node* insert(int vertex, int value);
 void update(Node* node, int value);
 Node* findMin();
 Node* deleteMin();
 void initHeap();
+
+#endif
