@@ -1,5 +1,6 @@
 #include <iostream>
-#include "ParingHeap.h"
+//#include "ParingHeap.h"
+#include "FibHeap.h"
 #include <limits>
 #include <fstream>
 
