@@ -11,6 +11,7 @@
 using namespace std;
 
 struct Edge{
+    int i;
     int weight;
     Node* node;
     Edge* next;
