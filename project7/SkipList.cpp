@@ -17,6 +17,7 @@ struct NodeStruct{
     int key;
     /* there can be values of any type, if you want */
     Node *forward;  //use array to save level-pointers
+    int level;
 };
 
 /* skip list */
@@ -30,6 +31,7 @@ struct ListStruct{
 Node MakeNode(int level) {
 	Node node = (Node)malloc(sizeof(struct ListStruct));
 	node->forward = (Node *)malloc(sizeof(Node) * level);
+	node->level = level;
 	return node;
 }
 
@@ -90,8 +92,9 @@ int Insert(int x, List list) {
 	//new node
 	Node node = MakeNode(level);
 	node->key = x;
+
 	//update the list of the closest nodes to x in each level, which is below x's level
-	for(i = 0; i < level; i++){
+	for(i = 0; i < node->level; i++){
 		node->forward[i] = update[i]->forward[i];
 		update[i]->forward[i] = node;
 	}
@@ -115,15 +118,11 @@ int Delete(int x, List list) {
 	if(!next || next->key != x) return -1;
 	
 	//next is the exactly node to delete, update the pointers in each level, which is below x's level
-	for(i = 0; i < list->level; i++) {
-    	if (update[i]->forward[i] == next)
-     		update[i]->forward[i] = next->forward[i];
-  	}
+	for(i = 0; i < next->level; i++)
+		update[i]->forward[i] = next->forward[i];
+		
 	//update the highest level of the list
-  	for(i = list->level - 1; i >= 0; i--) {
-    	if(list->head->forward[i] != NULL) break;
-	}
-	list->level = i + 1;
+  	if(next->level > list->level) list->level = next->level;
 	
 	free(next);  //delete the node x
 	
