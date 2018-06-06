@@ -3,12 +3,18 @@
 #include <ctime>
 
 #define MAXLEVEL 12
+#define PRABABILITY 0.5 
 /* you can change the maxlevel */
 
 /* generate random level */
 int Random(int max){
-	int r = rand() % max;
-	return r + 1;
+	int r = 1;
+	//every level has probability p to ascend upwards
+	while(rand() % 1000 < 1000 * PRABABILITY){
+		r++;
+		if(r >= max) return max;
+	}
+	return r;
 }
 
 /* list node */
@@ -159,7 +165,7 @@ int main(){
 	List list = MakeList();	//empty list
 	
 	int i;
-	int N = 100;
+	int N = 1000;
 	/*
 	//ordered sequence
 	for(i = 1; i < N; i++){
