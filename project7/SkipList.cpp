@@ -10,7 +10,7 @@
 int Random(int max){
 	int r = 1;
 	//every level has probability p to ascend upwards
-	while(rand() % 1000 < 1000 * PRABABILITY){
+	while(rand() % 100 < 100 * PRABABILITY){
 		r++;
 		if(r >= max) return max;
 	}
@@ -107,6 +107,46 @@ int Insert(int x, List list) {
 	return 0;
 }
 
+/* this insertion will not really insert the node into the list */
+int FictionInsert(int x, List list) {
+	Node update[MAXLEVEL];  //keep the nodes whose pointers are likely to be changed in the insertion
+	Node p = list->head;
+	Node next;
+	int i;
+	Node fiction = MakeNode(MAXLEVEL);  //fake node
+	//nested loop to search the key, same as search()
+	for(i = list->level - 1; i >= 0; i--){
+		for(next = p->forward[i];
+		 	next && next->key < x;
+		 	p = next, next = p->forward[i]);
+		update[i] = fiction;
+	}
+	//the keys should be distinct
+	if(next && next->key == x) return -1;
+	
+	int level = Random(list->level + 1);	//这里有待改动，是否应该以目前最高层数+1为上限？
+	if(level > MAXLEVEL) level = MAXLEVEL;	//can't be higher than maxlevel
+	
+	//if it is higher than present level of the list, head pointers should also be updated
+	if(level > list->level) {
+		update[list->level] = fiction;
+		list->level = list->level;
+	}
+	
+	//new node
+	Node node = MakeNode(level);
+	node->key = x;
+
+	//update the list of the closest nodes to x in each level, which is below x's level
+	for(i = 0; i < node->level; i++){
+		node->forward[i] = update[i]->forward[i];
+		update[i]->forward[i] = node;
+	}
+	free(node);
+	free(fiction);
+	return 0;
+}
+
 /* delete node x from skip list */ 
 int Delete(int x, List list) {
 	Node update[MAXLEVEL];
@@ -131,6 +171,35 @@ int Delete(int x, List list) {
   	if(next->level > list->level) list->level = next->level;
 	
 	free(next);  //delete the node x
+	
+	return 0;
+}
+
+/* delete node x from skip list */ 
+int FictionDelete(int x, List list) {
+	Node update[MAXLEVEL];
+	Node p = list->head;
+	Node next = NULL;
+	int i;
+	Node fiction = MakeNode(MAXLEVEL);
+	//nested loop to search the key, same as insert()
+	for(i = list->level - 1; i >= 0; i--){
+		for(next = p->forward[i];
+		 	next && next->key < x;
+		 	p = next, next = p->forward[i]); 
+		update[i] = fiction;
+	}
+	//if x is not in the list, return error
+	if(!next || next->key != x) return -1;
+	
+	//next is the exactly node to delete, update the pointers in each level, which is below x's level
+	for(i = 0; i < next->level; i++)
+		update[i]->forward[i] = next->forward[i];
+		
+	//update the highest level of the list
+  	if(next->level > list->level) list->level = list->level;
+	
+	free(fiction);  //delete the node x
 	
 	return 0;
 }
@@ -184,6 +253,7 @@ int main(){
 
 	//search and print
 	for(i = 1; i < N; i++){
+		FictionDelete(335, list);
 		Node node = Search(i, list);
 		if(node)
 			printf("%d ", node->key);  //print the key founded
