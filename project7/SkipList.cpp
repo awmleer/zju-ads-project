@@ -56,7 +56,7 @@ List MakeList() {
 
 /* the search operation of skip list */
 Node Search(int x, List list){
-	Node p = list->head, next;
+	Node p = list->head, next = nullptr;
 	int i;
 	//nested loop to search the key
 	for(i = list->level - 1; i >= 0; i--){
@@ -74,7 +74,7 @@ Node Search(int x, List list){
 int Insert(int x, List list) {
 	Node update[MAXLEVEL];//keep the nodes whose pointers are likely to be changed in the insertion
 	Node p = list->head;
-	Node next;
+	Node next = nullptr;
 	int i;
 	//nested loop to search the key, same as search()
 	for(i = list->level - 1; i >= 0; i--){
@@ -111,7 +111,7 @@ int Insert(int x, List list) {
 int FictionInsert(int x, List list) {
 	Node update[MAXLEVEL];  //keep the nodes whose pointers are likely to be changed in the insertion
 	Node p = list->head;
-	Node next;
+	Node next = nullptr;
 	int i;
 	Node fiction = MakeNode(MAXLEVEL);  //fake node
 	//nested loop to search the key, same as search()
@@ -151,7 +151,7 @@ int FictionInsert(int x, List list) {
 int Delete(int x, List list) {
 	Node update[MAXLEVEL];
 	Node p = list->head;
-	Node next = NULL;
+	Node next = nullptr;
 	int i;
 	//nested loop to search the key, same as insert()
 	for(i = list->level - 1; i >= 0; i--){
@@ -265,9 +265,5 @@ int main(){
 	//print list in level order
 	ShowList(list);
 }
-
 //ctime included
 //do not insert non-positive keys!
-
-
-
