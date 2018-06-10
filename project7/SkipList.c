@@ -35,7 +35,7 @@ struct ListStruct{
 
 /* create a new node and make space for it */
 Node MakeNode(int level) {
-	Node node = (Node)malloc(sizeof(struct ListStruct));
+	Node node = (Node)malloc(sizeof(struct NodeStruct));
 	node->forward = (Node *)malloc(sizeof(Node) * level);
 	node->level = level;
 	return node;
@@ -86,7 +86,7 @@ int Insert(int x, List list) {
 	//the keys should be distinct
 	if(next && next->key == x) return -1;
 	
-	int level = Random(list->level + 1);	//ÕâÀïÓÐ´ý¸Ä¶¯£¬ÊÇ·ñÓ¦¸ÃÒÔÄ¿Ç°×î¸ß²ãÊý+1ÎªÉÏÏÞ£¿
+	int level = Random(list->level + 1);	//è¿™é‡Œæœ‰å¾…æ”¹åŠ¨ï¼Œæ˜¯å¦åº”è¯¥ä»¥ç›®å‰æœ€é«˜å±‚æ•°+1ä¸ºä¸Šé™ï¼Ÿ
 	if(level > MAXLEVEL) level = MAXLEVEL;	//can't be higher than maxlevel
 	
 	//if it is higher than present level of the list, head pointers should also be updated
@@ -124,7 +124,7 @@ int FictionInsert(int x, List list) {
 	//the keys should be distinct
 	if(next && next->key == x) return -1;
 	
-	int level = Random(list->level + 1);	//ÕâÀïÓÐ´ý¸Ä¶¯£¬ÊÇ·ñÓ¦¸ÃÒÔÄ¿Ç°×î¸ß²ãÊý+1ÎªÉÏÏÞ£¿
+	int level = Random(list->level + 1);	//è¿™é‡Œæœ‰å¾…æ”¹åŠ¨ï¼Œæ˜¯å¦åº”è¯¥ä»¥ç›®å‰æœ€é«˜å±‚æ•°+1ä¸ºä¸Šé™ï¼Ÿ
 	if(level > MAXLEVEL) level = MAXLEVEL;	//can't be higher than maxlevel
 	
 	//if it is higher than present level of the list, head pointers should also be updated
@@ -244,12 +244,16 @@ int main(){
 		Insert(i, list);
 	}
 	*/
-	
-	//random sequence
-	int step = 100;
-	for(i = 1; i < N ; i++){
-		Insert(RandTest(i, i + step), list);
+
+	int count = 0;
+	while(count < N){
+		if(Insert(RandTest(0, N*10), list)){
+			count += 1;
+		}
 	}
+
+	//print list in level order
+	ShowList(list);
 
 	//search and print
 	for(i = 1; i < N; i++){
@@ -262,8 +266,6 @@ int main(){
 	}
 	printf("\n");
 	
-	//print list in level order
-	ShowList(list);
 }
 //ctime included
 //do not insert non-positive keys
