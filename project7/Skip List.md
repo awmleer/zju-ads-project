@@ -12,128 +12,118 @@
 
 #### Chapter 2
 
-**Struct:**
+**Node:**
 
-```C++
-typedef struct NodeStruct Node;
+Every node has a key value for sort, a value for store, and a sequence to store the node forward. Then it has a level value to show the level.
+
+```c++
+typedef struct NodeStruct* Node;
 struct NodeStruct{
     int key;
     int value;
-    Node *forward[1];
-};
-
-typedef struct ListStruct List;
-struct ListStruct{
+    Node *forward;  //use array to save level-pointers
     int level;
-    Node *header;
+};
+```
+
+**Skiplist:**
+
+Every list has a head node, and set a level value to show the level.
+
+```c++
+typedef struct ListStruct* List;
+struct ListStruct{
+    int level;  //the highest level
+    Node head;
 };
 ```
 
 **Initialize:**
 
-A skip list is built in layers. The bottom layer is an ordinary ordered linked list. Each higher layer acts as an "express lane" for the lists below, where an element in layer ![i](https://wikimedia.org/api/rest_v1/media/math/render/svg/add78d8608ad86e54951b8c8bd6c8d8416533d20) appears in layer ![i+1](https://wikimedia.org/api/rest_v1/media/math/render/svg/2fe1bfc8314922e4c3fdb4e8eceb20a00b4f011d) with some fixed probability ![p](https://wikimedia.org/api/rest_v1/media/math/render/svg/81eac1e205430d1f40810df36a0edffdc367af36) (two commonly used values for ![p](https://wikimedia.org/api/rest_v1/media/math/render/svg/81eac1e205430d1f40810df36a0edffdc367af36) are ![{\frac {1}{2}}](https://wikimedia.org/api/rest_v1/media/math/render/svg/a11cfb2fdb143693b1daf78fcb5c11a023cb1c55) or![\frac{1}{4}](https://wikimedia.org/api/rest_v1/media/math/render/svg/a2dfb63ee75ec084f2abb25d248bc151a2687508)). On average, each element appears in ![{\displaystyle {\frac {1}{1-p}}}](https://wikimedia.org/api/rest_v1/media/math/render/svg/5f7924af7cc11107f8304ec42323a1ad0b034672) lists, and the tallest element (usually a special head element at the front of the skip list) in all the lists. The skip list contains ![{\displaystyle \log _{\frac {1}{p}}n\,}](https://wikimedia.org/api/rest_v1/media/math/render/svg/ed3cb9aa9a9d7b6593b5d23b7eea9bb0f1b557a7) lists. 
+An element NIL is given a key greater than any legal key. All levels of all skip lists are terminated with NIL.A new list is initialized so that the level of the list is equal to 1 and all forward pointers of the list’s header point to NIL. 
 
-```C++
-List* create()  
-{
-    List *sl=(skiplist *)malloc(sizeof(List));    
-    sl->level=0;
-    sl->header=createNode(MAX_LEVEL-1,0,0);    
-    for(int i=0;i<MAX_LEVEL;i++)    
-        sl->header->forward[i]=NULL; 
-    return sl;  
-}  
+```c++
+/* create a new node and make space for it */
+Node MakeNode(int level) {
+	Node node = (Node)malloc(sizeof(struct NodeStruct));
+	node->forward = (Node *)malloc(sizeof(Node) * level);
+	node->level = level;
+	return node;
+}
+
+/* the establishment of skip list */
+List MakeList() {
+	List list = (List)malloc(sizeof(struct ListStruct));
+	list->level = 0;
+	list->head = MakeNode(MAXLEVEL);
+	list->head->key = -1;
+	int i;
+	for (i = 0; i < MAXLEVEL; i++) {
+    	list->head->forward[i] = NULL;  //set pointers to null for each level
+  	}
+  	return list;
+}
 ```
 
 **Search:**
 
-A search for a target element begins at the head element in the top list, and proceeds horizontally until the current element is greater than or equal to the target. If the current element is equal to the target, it has been found. If the current element is greater than the target, or the search reaches the end of the linked list, the procedure is repeated after returning to the previous element and dropping down vertically to the next lower list. The expected number of steps in each linked list is at most ![{\frac {1}{p}}](https://wikimedia.org/api/rest_v1/media/math/render/svg/31025cccb5c9d719d490bfc933e8d7b6b6f2b425), which can be seen by tracing the search path backwards from the target until reaching an element that appears in the next higher list or reaching the beginning of the current list. Therefore, the total *expected* cost of a search is ![{\displaystyle {\frac {\log _{\frac {1}{p}}n}{p}}}](https://wikimedia.org/api/rest_v1/media/math/render/svg/67074ae981cbf5fef1362caab705e9e0209a25a3) which is ![{\mathcal {O}}(\log n)\,](https://wikimedia.org/api/rest_v1/media/math/render/svg/0d4564f8652da4d6bc379228c67a2e1f86214ae8), when ![p](https://wikimedia.org/api/rest_v1/media/math/render/svg/81eac1e205430d1f40810df36a0edffdc367af36) is a constant. By choosing different values of ![p](https://wikimedia.org/api/rest_v1/media/math/render/svg/81eac1e205430d1f40810df36a0edffdc367af36), it is possible to trade search costs against storage costs. 
+We search for an element by traversing forward pointers that do not overshoot the node containing the element being searched for. When no more progress can be made at the current level of forward pointers, the search moves down to the next level. When we can make no more progress at level 1, we must be immediately in front of the node that contains the desired element (if it is in the list). 
 
-```c++
-int search(skiplist *sl,int key)  
-{  
-    nodeStructure *p,*q=NULL;  
-    p=sl->header;  
-    int k=sl->level;  
-    for(int i=k-1; i >= 0; i--){  
-        while((q=p->forward[i])&&(q->key<=key)){  
-            if(q->key==key)  
-                return q->value;  
-            p=q;
-    	}
-    }
-    return 0;  
-}  
+```
+Search(list, searchKey)  
+    x := list→header  
+    -- loop invariant: x→key < searchKey  
+    for i := list→level downto1 do  
+        whilex→forward[i]→key < searchKey do  
+            x := x→forward[i]  
+    -- x→key < searchKey ≤x→forward[1]→key  
+    x := x→forward[1]  
+    if x→key = searchKey then returnx→value  
+    else return failure  
 ```
 
-**Insert:**
+**Insert&Delete:**
 
-The implementation of insert and delete is very similar to the normal linked list unless the high-level element must be operated in all the linked list.
-
-```c++
-bool insert(List *sl,int key,int value)  
-{  
-    Node *update[MAX_LEVEL];  
-    Node *p, *q = NULL;  
-    p=sl->header;  
-    int k=sl->level;  
-    for(int i=k-1; i >= 0; i--){  
-        while((q=p->forward[i])&&(q->key<key))  
-            p=q;   
-        update[i]=p;  
-    }  
-    if(q&&q->key==key)  
-        return false;  
-    k=randomLevel();  
-    if(k>(sl->level))  
-    {  
-        for(int i=sl->level; i < k; i++){  
-            update[i] = sl->header;  
-        }  
-        sl->level=k;  
-    }  
-    q=createNode(k,key,value);  
-    for(int i=0;i<k;i++)  
-    {  
-        q->forward[i]=update[i]->forward[i];  
-        update[i]->forward[i]=q;  
-    }  
-    return true;  
-}  
-```
-
-**Delete:**
+To insert or delete a node, we simply search and splice. A vector update is maintained so that when the search is complete (and we are ready to perform the splice), update[i] contains a pointer to the rightmost node of level i or higher that is to the left of the location of the insertion/deletion. If an insertion generates a node with a level greater than the previous maximum level of the list, we update the maximum level of the list and initialize the appropriate portions of the update vector. After each deletion, we check if we have deleted the maximum element of the list and if so, decrease the maximum level of the list. 
 
 ```c++
-bool deleteSL(List *sl,int key)  
-{  
-    Node *update[MAX_LEVEL];    
-    Node *p,*q=NULL; 
-    p=sl->header; 
-    int k=sl->level;  
-    for(int i=k-1; i >= 0; i--){
-        while((q=p->forward[i])&&(q->key<key))  
-            p=q;  
-        update[i]=p;  
-    }  
-    if(q&&q->key==key)  
-    { 
-        for(int i=0; i<sl->level; i++){    
-            if(update[i]->forward[i]==q){    
-                update[i]->forward[i]=q->forward[i];    
-            }  
-        }   
-        free(q);  
-        for(int i=sl->level-1; i >= 0; i--){    
-            if(sl->header->forward[i]==NULL){    
-                sl->level--;    
-            }    
-        }   
-        return true;  
-    }  
+Insert(list, searchKey, newValue)  
+    localupdate[1..MaxLevel]  
+    x := list→header  
+    for i := list→level down to 1 do  
+        whilex→forward[i]→key < searchKey do  
+            x := x→forward[i]  
+        update[i] := x  
+    x := x→forward[1]  
+    if x→key = searchKey then x→value := newValue  
     else  
-        return false;  
-}  
+        newLevel := randomLevel()  
+        if newLevel > list→level then  
+            for i := list→level + 1 to newLevel do  
+                update[i] := list→header  
+            list→level := newLevel  
+        x := makeNode(newLevel , searchKey, value)  
+        for i := 1 tonewLevel do  
+            x→forward[i] := update[i]→forward[i]  
+            update[i]→forward[i] := x  
+```
+
+```
+Delete(list, searchKey)  
+    local update[1..MaxLevel]  
+    x := list→header  
+    for i := list→level down to 1 do  
+        while x→forward[i]→key < searchKey do  
+            x := x→forward[i]  
+        update[i] := x  
+    x := x→forward[1]  
+    if x→key = searchKey then  
+        for i := 1 to list→level do  
+            if update[i]→forward[i] ≠ x then break  
+            update[i]→forward[i] := x→forward[i]  
+        free(x)  
+        while list→level > 1 and list→header→forward[list→level] = NIL do  
+            list→level := list→level – 1  
 ```
 
 #### Chapter3:
