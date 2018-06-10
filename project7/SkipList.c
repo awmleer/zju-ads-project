@@ -256,7 +256,7 @@ float test(int N){
 	// }
 	//print list in level order
 	// ShowList(list);
-	return ((double) sum)/CLOCKS_PER_SEC*1000000/1000;
+	return ((double) sum)/CLOCKS_PER_SEC;
 }
 
 int main(){
