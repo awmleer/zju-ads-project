@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define MAXLEVEL 12
+#define MAXLEVEL 10
 #define PRABABILITY 0.5 
 /* you can change the maxlevel */
 
@@ -249,6 +249,8 @@ float test(int N, int method){
 			sum += end - start;
 		}
 	}
+	//print list in level order
+	// ShowList(list);
 	return ((double) sum)/CLOCKS_PER_SEC*1000000/N;
 }
 
@@ -260,16 +262,13 @@ int main(){
 	for(int i=0; i<10; i++){
 		float cpu_time_used = 0;
 		for(int j = 0; j<10; j++){
-			cpu_time_used += test(sizes[i], 0);
+			cpu_time_used += test(sizes[i], 1);
 		}
 		cpu_time_used = cpu_time_used/10;
 		printf("%lf\n", cpu_time_used);
 	}
 
 	
-
-	//print list in level order
-	// ShowList(list);
 
 	//search and print
 	// for(i = 1; i < N; i++){
