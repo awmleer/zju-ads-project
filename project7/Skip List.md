@@ -159,7 +159,7 @@ bool deleteSL(List *sl,int key)
 
 - A sorted set is often target of many ZRANGE or ZREVRANGE operations, that is, traversing the skip list as a linked list. With this operation the cache locality of skip lists is at least as good as with other kind of balanced trees.
 
-   From the test result, we can clearly find that the skiplist search and insert faster than normal linked list. For detailed, the time complexity is ![{\mathcal {O}}(\log n)\,](https://wikimedia.org/api/rest_v1/media/math/render/svg/0d4564f8652da4d6bc379228c67a2e1f86214ae8). However, the delete operation is same with normal linked list. And with more and more node being deleted, the randomness will reduce. 
+   From the test result, we can clearly find that the skiplist search and insert faster than normal linked list. For detailed, the time complexity is O(logn). However, the delete operation is same with normal linked list. And with more and more node being deleted, the randomness will reduce. 
 
   #### Appendix:
 
