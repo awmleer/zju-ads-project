@@ -86,7 +86,7 @@ int Insert(int x, List list) {
 	//the keys should be distinct
 	if(next && next->key == x) return -1;
 	
-	int level = Random(list->level + 1);	//这里有待改动，是否应该以目前最高层数+1为上限？
+	int level = Random(list->level + 1);	//random a level
 	if(level > MAXLEVEL) level = MAXLEVEL;	//can't be higher than maxlevel
 	
 	//if it is higher than present level of the list, head pointers should also be updated
@@ -124,7 +124,7 @@ int FictionInsert(int x, List list) {
 	//the keys should be distinct
 	if(next && next->key == x) return -1;
 	
-	int level = Random(list->level + 1);	//这里有待改动，是否应该以目前最高层数+1为上限？
+	int level = Random(list->level + 1);	//random a level
 	if(level > MAXLEVEL) level = MAXLEVEL;	//can't be higher than maxlevel
 	
 	//if it is higher than present level of the list, head pointers should also be updated
@@ -228,43 +228,59 @@ int RandTest(int low, int up){
 	return low + rand()%(up - low);
 }
 
-int main(){
-	
-	srand(time(NULL)); //set rand seed
+float test(int N, int method){
 	List list = MakeList();	//empty list
-	
-	int i;
-	int N = 1000;
-	/*
-	//ordered sequence
-	for(i = 1; i < N; i++){
-		Insert(i, list);
-	}
-	for(i = N; i > 0; i--){
-		Insert(i, list);
-	}
-	*/
-
 	int count = 0;
+
+	clock_t start, end;
+	unsigned long sum = 0;
+	int val = 0;
 	while(count < N){
-		if(Insert(RandTest(0, N*10), list)){
+		if (method == 1){
+			val = RandTest(0, N*10);
+		}else{
+			val += 1;
+		}
+		start = clock();
+		int result = Insert(val, list);
+		end = clock();
+		if(result==0){
 			count += 1;
+			sum += end - start;
 		}
 	}
+	return ((double) sum)/CLOCKS_PER_SEC*1000000/N;
+}
+
+int main(){
+	srand(time(NULL)); //set rand seed
+
+	int sizes[10] = {1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000};
+	// int sizes[19] = {5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000, 55000, 60000, 65000, 70000, 75000, 80000};
+	for(int i=0; i<10; i++){
+		float cpu_time_used = 0;
+		for(int j = 0; j<10; j++){
+			cpu_time_used += test(sizes[i], 0);
+		}
+		cpu_time_used = cpu_time_used/10;
+		printf("%lf\n", cpu_time_used);
+	}
+
+	
 
 	//print list in level order
-	ShowList(list);
+	// ShowList(list);
 
 	//search and print
-	for(i = 1; i < N; i++){
-		FictionDelete(335, list);
-		Node node = Search(i, list);
-		if(node)
-			printf("%d ", node->key);  //print the key founded
-		else
-			printf("$ ");  //if not found
-	}
-	printf("\n");
+	// for(i = 1; i < N; i++){
+	// 	FictionDelete(335, list);
+	// 	Node node = Search(i, list);
+	// 	if(node)
+	// 		printf("%d ", node->key);  //print the key founded
+	// 	else
+	// 		printf("$ ");  //if not found
+	// }
+	// printf("\n");
 	
 }
 //ctime included
