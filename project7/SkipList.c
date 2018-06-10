@@ -233,7 +233,7 @@ void test(int N){
 	int i = 0;
 	float cpu_time_used;
 
-	printf("Size: %d\n", N);
+	printf("Size: %d ", N);
 
 	clock_t start, end;
 	unsigned long sum = 0;
@@ -256,7 +256,7 @@ void test(int N){
 	// ShowList(list);
 	// printf("%lu\n", sum);
 	cpu_time_used = ((double) sum)/CLOCKS_PER_SEC;
-	printf("Insert: %lf\n", cpu_time_used);
+	printf("Insert: %lf ", cpu_time_used);
 
 	start = clock();
 	for(i=0; i<1000000; i++){
@@ -271,8 +271,24 @@ void test(int N){
 	// ShowList(list);
 	// printf("%lu\n", sum);
 	cpu_time_used = ((double) sum)/CLOCKS_PER_SEC;
-	printf("Delete: %lf\n", cpu_time_used);
-	printf("-----------------\n");
+	printf("Delete: %lf ", cpu_time_used);
+
+	start = clock();
+	for(i=0; i<1000000; i++){
+		val = RandTest(0, N);
+		val = val*5;
+		// printf("%lu\n", start);
+		Search(val, list);
+	}
+	end = clock();
+	sum = end - start;
+	//print list in level order
+	// ShowList(list);
+	// printf("%lu\n", sum);
+	cpu_time_used = ((double) sum)/CLOCKS_PER_SEC;
+	printf("Search: %lf ", cpu_time_used);
+
+	printf("\n");
 }
 
 int main(){
