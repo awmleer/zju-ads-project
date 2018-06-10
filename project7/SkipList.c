@@ -262,8 +262,6 @@ int main(){
 		printf("%lf\n", cpu_time_used);
 	}
 
-	
-
 	//search and print
 	// for(i = 1; i < N; i++){
 	// 	FictionDelete(335, list);
