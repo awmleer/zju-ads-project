@@ -228,9 +228,12 @@ int RandTest(int low, int up){
 	return low + rand()%(up - low);
 }
 
-float test(int N){
+void test(int N){
 	List list = MakeList();	//empty list
 	int i = 0;
+	float cpu_time_used;
+
+	printf("Size: %d\n", N);
 
 	clock_t start, end;
 	unsigned long sum = 0;
@@ -240,20 +243,8 @@ float test(int N){
 		Insert(val, list);
 	}
 
-	// int count = 0;
-	// while(count<1000){
-	// 	val = RandTest(0, N);
-	// 	start = clock();
-	// 	printf("%lu\n", start);
-	// 	int result = FictionInsert(val, list);
-	// 	end = clock();
-	// 	if(result == 0){
-	// 		sum += end - start;
-	// 		count++;
-	// 	}
-	// }
 	start = clock();
-	for(i=0; i<1000; i++){
+	for(i=0; i<10000; i++){
 		val = RandTest(0, N);
 		val = val*5 + 1;
 		// printf("%lu\n", start);
@@ -263,8 +254,25 @@ float test(int N){
 	sum = end - start;
 	//print list in level order
 	// ShowList(list);
-	printf("%lu\n", sum);
-	return ((double) sum)/CLOCKS_PER_SEC;
+	// printf("%lu\n", sum);
+	cpu_time_used = ((double) sum)/CLOCKS_PER_SEC/10;
+	printf("Insert: %lf\n", cpu_time_used);
+
+	start = clock();
+	for(i=0; i<10000; i++){
+		val = RandTest(0, N);
+		val = val*5;
+		// printf("%lu\n", start);
+		FictionDelete(val, list);
+	}
+	end = clock();
+	sum = end - start;
+	//print list in level order
+	// ShowList(list);
+	// printf("%lu\n", sum);
+	cpu_time_used = ((double) sum)/CLOCKS_PER_SEC/10;
+	printf("Delete: %lf\n", cpu_time_used);
+	printf("-----------------\n");
 }
 
 int main(){
@@ -273,8 +281,7 @@ int main(){
 	int sizes[10] = {1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000};
 	// int sizes[19] = {5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000, 55000, 60000, 65000, 70000, 75000, 80000};
 	for(int i=0; i<10; i++){
-		float cpu_time_used = test(sizes[i]);
-		printf("%lf\n", cpu_time_used);
+		test(sizes[i]);
 	}
 
 	//search and print
