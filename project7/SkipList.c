@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define MAXLEVEL 10
+#define MAXLEVEL 14
 #define PRABABILITY 0.5 
 /* you can change the maxlevel */
 
@@ -228,30 +228,28 @@ int RandTest(int low, int up){
 	return low + rand()%(up - low);
 }
 
-float test(int N, int method){
+float test(int N){
 	List list = MakeList();	//empty list
-	int count = 0;
+	int i = 0;
 
 	clock_t start, end;
 	unsigned long sum = 0;
 	int val = 0;
-	while(count < N){
-		if (method == 1){
-			val = RandTest(0, N*10);
-		}else{
-			val += 1;
-		}
+	for(i=0; i<N; i++){
+		val += 5;
+		Insert(val, list);
+	}
+
+	for(i=0; i<1000; i++){
+		val = RandTest(0, N*5);
 		start = clock();
-		int result = Insert(val, list);
+		FictionInsert(val, list);
 		end = clock();
-		if(result==0){
-			count += 1;
-			sum += end - start;
-		}
+		sum += end - start;
 	}
 	//print list in level order
 	// ShowList(list);
-	return ((double) sum)/CLOCKS_PER_SEC*1000000/N;
+	return ((double) sum)/CLOCKS_PER_SEC*1000000/1000;
 }
 
 int main(){
@@ -260,11 +258,7 @@ int main(){
 	int sizes[10] = {1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000};
 	// int sizes[19] = {5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000, 55000, 60000, 65000, 70000, 75000, 80000};
 	for(int i=0; i<10; i++){
-		float cpu_time_used = 0;
-		for(int j = 0; j<10; j++){
-			cpu_time_used += test(sizes[i], 1);
-		}
-		cpu_time_used = cpu_time_used/10;
+		float cpu_time_used = test(sizes[i]);
 		printf("%lf\n", cpu_time_used);
 	}
 
