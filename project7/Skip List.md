@@ -62,6 +62,8 @@ int search(skiplist *sl,int key)
 
 **Insert:**
 
+The implementation of insert and delete is very similar to the normal linked list unless the high-level element must be operated in all the linked list.
+
 ```c++
 bool insert(List *sl,int key,int value)  
 {  
