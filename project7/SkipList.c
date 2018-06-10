@@ -240,13 +240,20 @@ float test(int N){
 		Insert(val, list);
 	}
 
-	for(i=0; i<1000; i++){
+	int count = 0;
+	while(count<1000){
 		val = RandTest(0, N*5);
 		start = clock();
-		FictionInsert(val, list);
+		int result = FictionInsert(val, list);
 		end = clock();
-		sum += end - start;
+		if(result == 0){
+			sum += end - start;
+			count++;
+		}
 	}
+	// for(i=0; i<1000; i++){
+		
+	// }
 	//print list in level order
 	// ShowList(list);
 	return ((double) sum)/CLOCKS_PER_SEC*1000000/1000;
