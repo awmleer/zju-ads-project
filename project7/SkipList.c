@@ -240,22 +240,30 @@ float test(int N){
 		Insert(val, list);
 	}
 
-	int count = 0;
-	while(count<1000){
-		val = RandTest(0, N*5);
-		start = clock();
-		int result = FictionInsert(val, list);
-		end = clock();
-		if(result == 0){
-			sum += end - start;
-			count++;
-		}
-	}
-	// for(i=0; i<1000; i++){
-		
+	// int count = 0;
+	// while(count<1000){
+	// 	val = RandTest(0, N);
+	// 	start = clock();
+	// 	printf("%lu\n", start);
+	// 	int result = FictionInsert(val, list);
+	// 	end = clock();
+	// 	if(result == 0){
+	// 		sum += end - start;
+	// 		count++;
+	// 	}
 	// }
+	start = clock();
+	for(i=0; i<1000; i++){
+		val = RandTest(0, N);
+		val = val*5 + 1;
+		// printf("%lu\n", start);
+		FictionInsert(val, list);
+	}
+	end = clock();
+	sum = end - start;
 	//print list in level order
 	// ShowList(list);
+	printf("%lu\n", sum);
 	return ((double) sum)/CLOCKS_PER_SEC;
 }
 
